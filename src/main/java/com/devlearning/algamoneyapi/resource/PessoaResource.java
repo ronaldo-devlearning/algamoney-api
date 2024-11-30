@@ -18,42 +18,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devlearning.algamoneyapi.event.RecursoCriadoEvent;
-import com.devlearning.algamoneyapi.model.Categoria;
-import com.devlearning.algamoneyapi.repository.CategoriaRepository;
+import com.devlearning.algamoneyapi.model.Pessoa;
+import com.devlearning.algamoneyapi.repository.PessoaRepository;
 
 // A anotação @RestController permite definir um controller com características REST
 @RestController
 
 /* A anotação @RequestMapping permite definir uma rota. Caso não seja informado o método 
 HTTP da rota, ela será definida para todos os métodos */
-@RequestMapping("/categorias")
-public class CategoriaResource {
+@RequestMapping("/pessoas")
+public class PessoaResource {
 
 	// A anotação @Autowired delega ao Spring Boot a inicialização do objeto
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private PessoaRepository pessoaRepository;
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping
-	public List<Categoria> listar() {
-		return categoriaRepository.findAll(); 
+	public List<Pessoa> listar() {
+		return pessoaRepository.findAll(); 
 	}
 	
 	@PostMapping
 	// A anotação @RequestBody indica que o valor do objeto virá do corpo da requisição
-	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
-		Categoria categoriaSalva = categoriaRepository.save(categoria);
-		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
+	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
+		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
 	
 	@GetMapping("/{codigo}")
-	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		Optional<Categoria> categoria = categoriaRepository.findById(codigo);
-		return categoria.isPresent() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
+	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
+		Optional<Pessoa> pessoa = pessoaRepository.findById(codigo);
+		return pessoa.isPresent() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
 	}
 	
 }
