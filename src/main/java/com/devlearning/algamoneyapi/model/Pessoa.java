@@ -1,5 +1,6 @@
 package com.devlearning.algamoneyapi.model;
 
+import java.beans.Transient;
 import java.util.Objects;
 
 import javax.persistence.Embedded;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pessoa")
@@ -44,6 +47,11 @@ public class Pessoa {
 	}
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 	public Endereco getEndereco() {
 		return endereco;
